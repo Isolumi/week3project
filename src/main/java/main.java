@@ -11,7 +11,7 @@ import java.util.Arrays;
 public class main {
     public static void main(String[] args) throws IOException, InterruptedException, ApiException {
         GeoApiContext context = new GeoApiContext.Builder()
-                .apiKey("AIzaSyCCPBnR3n8Rhx4t8rbOzbSjIGXEmlW-5n4")
+                .apiKey("Your API key here")
                 .build();
         try
         {
