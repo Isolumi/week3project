@@ -12,6 +12,6 @@ https://github.com/googlemaps/google-maps-services-java#readme
 # Screenshot of GET request
 ![Get request output example](img.png)
 # Example output of running Java code
-![output of example GET request](img_1.png)
+![output of example GET request](img_2.png)
 # Techinical problems
 - We needed an efficient way to access all of UofT's courses and their location and time, but we couldn't find a public API that offered that service.
