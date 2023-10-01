@@ -1,29 +1,33 @@
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.maps.DirectionsApi;
-import com.google.maps.GeoApiContext;
-import com.google.maps.errors.ApiException;
-import com.google.maps.model.DirectionsResult;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 public class main {
-    public static void main(String[] args) throws IOException, InterruptedException, ApiException {
-        GeoApiContext context = new GeoApiContext.Builder()
-                .apiKey("Your API key here")
+    public static void main(String[] args) throws IOException, InterruptedException {
+        OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
-        try
-        {
-            DirectionsResult res = DirectionsApi.getDirections(context, "43.6595903772, -79.3976291786", "43.667202, -79.3923527").await();
-            //        Gson gson = new GsonBuilder().registerTypeAdapter(ZonedDateTime.class, ZonedDateTimeAdapter()).setPrettyPrinting().create();
-            System.out.println("status: " + res.geocodedWaypoints[0].geocoderStatus + " " + Arrays.toString(res.routes[0].legs));
-        }
-        catch (Exception e)
-        {
-            System.out.println(e);
-        }
+        Request request = new Request.Builder()
+                .url(String.format("https://maps.googleapis.com/maps/api/directions/json?origin=%s&destination=%s&key=%s", "43.6595903772, -79.3976291786", "43.667202, -79.3923527", "your api key here"))
+                .build();
+        try {
+            Response response = client.newCall(request).execute();
+            System.out.println(response);
+            JSONObject responseBody = new JSONObject(response.body().string());
 
-        context.shutdown();
+            if (responseBody.getString("status").equals("OK")) {
+                JSONArray routes = responseBody.getJSONArray("routes");
+                System.out.println("status: " + responseBody.getString("status") + "\n" + routes);
+            } else {
+                throw new RuntimeException(responseBody.getString("error_message"));
+            }
+        } catch (IOException | JSONException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
